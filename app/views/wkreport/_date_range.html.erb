@@ -23,7 +23,7 @@
 </fieldset>
 <p class="buttons">
 	<%= link_to l(:button_apply), "javascript: openReportPopup();", :class => 'icon icon-checked' %>
-	<%#= link_to l(:button_apply), {:controller => controller_name, :action => action_name}, :class => 'icon icon-checked' %>
+	<%= link_to l(:button_csv_time_entries), {:controller => :wktime, :action => :csv_time_entry_report, :startdate=>@from.to_s, :enddate=>@to.to_s}, :method=>:post, :class => 'icon icon-checked' %>
   <%= link_to l(:button_clear), {:controller => controller_name, :action => action_name,:tab => "wkreport"}, :class => 'icon icon-reload' %>
 </p>
 

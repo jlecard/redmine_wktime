@@ -32,6 +32,8 @@
   
   get 'wktime/testapi', :to => 'wktime#testapi' 
   
+  post 'wktime/csv_time_entry_report', :to => 'wktime#csv_time_entry_report'
+  
   #get 'wktime/updateAttendance', :to => 'wktime#updateAttendance'
 match 'updateAttendance', :controller => 'wktime', :action => 'updateAttendance', :via => [:get]  
     

@@ -938,6 +938,30 @@ include QueriesHelper
 		render :action => 'time_rpt', :layout => false
 	end	
 	
+	def csv_time_entry_report
+	  logger.debug(session)
+	  logger.debug(params)
+	  @startday = params[:startdate]
+	  @endday = params[:enddate]
+    query = <<-SQLQUERY
+      SELECT te.spent_on, u.firstname, u.lastname, te.hours, e.name as "activity", te.issue_id as "qa task", p.name as "project", i.subject 
+      FROM issues i, time_entries te, users u, enumerations e, projects p
+      WHERE te.spent_on >="#{@startday}" and te.spent_on <="#{@endday}"
+         and u.id=te.user_id
+         and e.id = te.activity_id
+         and p.id=te.project_id
+         and i.id=te.issue_id order by te.spent_on asc, u.lastname asc;
+    SQLQUERY
+    issues = ActiveRecord::Base.connection.select_all(query)
+    str_issues = "Date\tUser\tHours\tActivity\tQA Task\tProject\tSubject\n"
+    issues.each do |issue|
+      str_issues += "#{issue['spent_on']}\t#{issue['firstname']} #{issue['lastname']}\t#{issue['hours']}\t#{issue['activity']}\t#{issue['qa task']}\t#{issue['project']}\t#{issue['subject']}\n"
+    end 
+    display_name = @endday.gsub(" ", "").gsub("-","")
+    send_data str_issues, :filename => "timesheets_#{display_name}.txt"
+         
+	end
+	
 		############ Moved from private ##############
 		
 	def findEntries
